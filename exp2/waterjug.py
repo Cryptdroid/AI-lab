@@ -1,3 +1,5 @@
+from math import gcd
+
 def water_jug_dfs(jug1_capacity, jug2_capacity, target):
     visited = set()
     path = []
@@ -28,6 +30,7 @@ def water_jug_dfs(jug1_capacity, jug2_capacity, target):
         
         path.pop()
         return False   
+    
     if dfs(0, 0):
         return path
     return None
@@ -37,11 +40,14 @@ if __name__ == "__main__":
     jug2_cap = int(input("Enter capacity of Jug 2: "))
     target = int(input("Enter the target amount: "))
     
-    result = water_jug_dfs(jug1_cap, jug2_cap, target)
-    
-    if result:
-        print(f"Solution found for target {target}:")
-        for i, state in enumerate(result):
-            print(f"Step {i}: Jug1 = {state[0]}, Jug2 = {state[1]}")
+    if target > max(jug1_cap, jug2_cap) or target % gcd(jug1_cap, jug2_cap) != 0:
+        print("No solution found (mathematically impossible)")
     else:
-        print("No solution found")
+        result = water_jug_dfs(jug1_cap, jug2_cap, target)
+        
+        if result:
+            print(f"Solution found for target {target}:")
+            for i, state in enumerate(result):
+                print(f"Step {i}: Jug1 = {state[0]}, Jug2 = {state[1]}")
+        else:
+            print("No solution found")
