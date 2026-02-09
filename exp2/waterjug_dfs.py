@@ -15,7 +15,7 @@ def water_jug_dfs(jug1_capacity, jug2_capacity, target):
         
         visited.add(state)
         path.append(state)
-        operations = [
+        rules = [
             (jug1_capacity, jug2), 
             (jug1, jug2_capacity),  
             (0, jug2),         
@@ -24,7 +24,7 @@ def water_jug_dfs(jug1_capacity, jug2_capacity, target):
             (min(jug1_capacity, jug1 + jug2), max(0, jug2 - (jug1_capacity - jug1)))
         ]
         
-        for next_state in operations:
+        for next_state in rules:
             if dfs(next_state[0], next_state[1]):
                 return True
         
@@ -41,7 +41,7 @@ if __name__ == "__main__":
     target = int(input("Enter the target amount: "))
     
     if target > max(jug1_cap, jug2_cap) or target % gcd(jug1_cap, jug2_cap) != 0:
-        print("No solution found (mathematically impossible)")
+        print("No solution found")
     else:
         result = water_jug_dfs(jug1_cap, jug2_cap, target)
         
@@ -49,5 +49,3 @@ if __name__ == "__main__":
             print(f"Solution found for target {target}:")
             for i, state in enumerate(result):
                 print(f"Step {i}: Jug1 = {state[0]}, Jug2 = {state[1]}")
-        else:
-            print("No solution found")
