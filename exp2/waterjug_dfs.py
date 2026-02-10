@@ -2,19 +2,18 @@ from math import gcd
 
 def water_jug_dfs(jug1_capacity, jug2_capacity, target):
     visited = set()
-    path = []
+    all_paths = []
     
-    def dfs(jug1, jug2):
+    def dfs(jug1, jug2, path):
         if jug1 == target or jug2 == target:
-            path.append((jug1, jug2))
-            return True
+            all_paths.append(path + [(jug1, jug2)])
+            return
         
         state = (jug1, jug2)
         if state in visited:
-            return False
+            return
         
         visited.add(state)
-        path.append(state)
         rules = [
             (jug1_capacity, jug2), 
             (jug1, jug2_capacity),  
@@ -25,15 +24,12 @@ def water_jug_dfs(jug1_capacity, jug2_capacity, target):
         ]
         
         for next_state in rules:
-            if dfs(next_state[0], next_state[1]):
-                return True
+            dfs(next_state[0], next_state[1], path + [state])
         
-        path.pop()
-        return False   
+        visited.remove(state)
     
-    if dfs(0, 0):
-        return path
-    return None
+    dfs(0, 0, [])
+    return all_paths if all_paths else None
 
 if __name__ == "__main__":
     jug1_cap = int(input("Enter capacity of Jug 1: "))
@@ -47,5 +43,7 @@ if __name__ == "__main__":
         
         if result:
             print(f"Solution found for target {target}:")
-            for i, state in enumerate(result):
-                print(f"Step {i}: Jug1 = {state[0]}, Jug2 = {state[1]}")
+            for path_num, path in enumerate(result):
+                print(f"\nPath {path_num + 1}:")
+                for i, state in enumerate(path):
+                    print(f"  Step {i}: Jug1 = {state[0]}, Jug2 = {state[1]}")

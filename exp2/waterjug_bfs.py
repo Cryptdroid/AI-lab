@@ -6,6 +6,7 @@ def water_jug_bfs(jug1_capacity, jug2_capacity, target):
     queue = deque([start])
     visited = {start}
     parent = {start: None}
+    solutions = []
 
     while queue:
         jug1, jug2 = queue.popleft()
@@ -16,7 +17,8 @@ def water_jug_bfs(jug1_capacity, jug2_capacity, target):
             while state is not None:
                 path.append(state)
                 state = parent[state]
-            return list(reversed(path))
+            solutions.append(list(reversed(path)))
+            continue  # Continue searching for other solutions
 
         rules = [
             (jug1_capacity, jug2),
@@ -33,7 +35,7 @@ def water_jug_bfs(jug1_capacity, jug2_capacity, target):
                 parent[next_state] = (jug1, jug2)
                 queue.append(next_state)
 
-    return None
+    return solutions if solutions else None
 
 if __name__ == "__main__":
     jug1_cap = int(input("Enter capacity of Jug 1: "))
@@ -43,9 +45,11 @@ if __name__ == "__main__":
     if target > max(jug1_cap, jug2_cap) or target % gcd(jug1_cap, jug2_cap) != 0:
         print("No solution found")
     else:
-        result = water_jug_bfs(jug1_cap, jug2_cap, target)
+        results = water_jug_bfs(jug1_cap, jug2_cap, target)
 
-        if result:
-            print(f"Solution found for target {target}:")
-            for i, state in enumerate(result):
-                print(f"Step {i}: Jug1 = {state[0]}, Jug2 = {state[1]}")
+        if results:
+            print(f"Found {len(results)} solution(s) for target {target}:")
+            for sol_num, result in enumerate(results, 1):
+                print(f"\nSolution {sol_num}:")
+                for i, state in enumerate(result):
+                    print(f"Step {i}: Jug1 = {state[0]}, Jug2 = {state[1]}")
